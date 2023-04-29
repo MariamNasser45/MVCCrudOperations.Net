@@ -1,0 +1,212 @@
+﻿               @*Since the  model is a collection of views [List of movies] *@
+
+@using System.Collections
+@using AspNetCoreHero.ToastNotification;
+@using NToastNotify;
+@using AspNetCoreHero.ToastNotification.Extensions;
+
+
+                         @*Define list of movie using IEnumerable or List*@
+
+@model IEnumerable<Movie>
+
+                         @*to set title of movies page*@
+@{
+    ViewData["Title"] = "Movies";
+
+
+}
+                         @*Using h tag to write Head of page*@
+<h3>
+                         @*now we add icon from bootstrap behind Movies*@
+
+    <i class="bi bi-film"></i>  
+    Movies
+
+</h3>
+
+
+                         @*creat button to open page allow to add movie*@
+                         @*btn btn=primary is bootstrap class*@
+                         @*asp-action : is the page will open when press on button *@
+
+<a  class="btn btn-primary" asp-action="Create"> 
+    <i class="bi bi-file-earmark-plus-fill"></i>  
+    Add Movies
+</a>
+
+                         @*add area which the movies will apper in it*@
+                         @*using div tag to make content away from button*@
+
+<div class="mt-lg-4">
+
+                         @*cheeck if no movies in DB using c# code*@                  
+
+    @if ((!Model.Any())) @* Any :- returne bool, if no movies print alert massage*@
+    {
+       <div class="alert alert-danger" role="alert"> @*Taking style of Alert from Bootstrap*@
+
+            <i class="bi bi-info-square-fill"></i>
+            No Movies Found
+
+       </div>
+
+    }
+    else
+    {
+        @*<ul>*@
+             
+            @* now we using <div tag to determine container which movies appear in it >*@
+            
+           <div>
+            @foreach(var movie in Model)
+            {          
+              @* <li> @movie.Name  [.Name is column in table movie in Db]  </li> *@
+
+              @*also replace <li> tag with <div>  to appear movies in the best *@
+
+
+                  <div class="col-12"> @* class make each movie take all column of form to the next movie apper in next area*@
+
+                         @* style form 'card title' from bootstrab*@
+
+                    <div class="card mb-3 " >
+                        <div class="row no-gutters"> @*row no-gutters: use to redmoving spaces between rows , columna*@
+
+                            <div class="col-md-2 poster"  style="background-image:
+                              url(data:image\/*;base64,@(Convert.ToBase64String(movie.Poster)))">  @*Converting data in Db to suitable with data type defined in c#*@        
+                          </div>
+                            <div class="col-md-10">
+                                <div class="card-body  d-flex flex-column justify-content-between h-100"> @*using this class from bootstrap to making directiom from up to down not ltr*@
+                                                                                                          @*and making rate at the down not after histori directe / h-100 to take complete width of form*@ 
+                                    <div style="text-align:justify">   @*MAKING TEXT JUSTIFY*@
+                                   <h5 class="card-title">@movie.Name (@movie.year)</h5>
+                                        <p class="card-text" id="readmore">
+                                           @if (movie.History.Length > 500)
+                                        {
+                                            @(movie.History.Substring(0, 500))
+                                            <a asp-action="ReadMore" asp-route-id="@movie.Id">  Read More  </a>
+                                        }
+                                        @if ( movie.History.Length < 500)
+                                            @(movie.History)
+                                        </p>
+
+                                    </div>
+                                    <div class="d-flex justify-content-between" > @*we deviding code into 2 seprate dive to will add buttons*@
+
+                                        <p class="card-text mt-2 mb-0">
+
+                                            <i class="bi bi-star-fill text-warning"></i> @* to add star icon  of rate*@
+                                            <small class="text-muted"> 
+                                                @movie.Rate.ToString("0.0") @* to make the rate of int number appear the num.0 ex : 9.0 instead of only num ex : 9*@
+                                                
+                                            </small>
+                                                                                      
+                                        </p>
+
+                                        <div > @* CREATE BUTTONS *@
+
+                                            <a asp-action="Details" asp-route-id="@movie.Id " class="btn btn-outline-secondary">
+
+                                                <i class="bi bi-camera-reels"> </i> @*icon from bootstrap*@
+                                                                    
+                                                            Details
+                                             </a>
+
+                                                  <a asp-action="Edit" asp-route-id="@movie.Id " class="btn btn-outline-primary">
+
+                                                <i class="bi bi-pencil"> </i> @*icon from bootstrap*@
+                                                               
+                                                Edit
+                                            </a>
+
+                                            @* Whilw using Delete button dont need it open other page so we needn't <a> tag*@
+                                            @*need only selector to working by it witj java script or jquery , id of movie to delet it*@
+
+
+                                        <a href="javascript:;" class="btn btn-danger js-delete" data-id="@movie.Id"> @*js-delede :the selector  *@
+
+                                            <i class="bi bi-trash"> </i> @*icon from bootstrap*@
+                                                Delete
+                                        </a>
+
+                                            </div> @*asp-rout : is the id of selected movies*@
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>  @*end of bootstrap code*@
+
+                      </div>
+            }
+           
+             </div>
+
+        @*</ul>*@
+    }
+
+</div>
+                        @* coding of javascripr to apply coding of delete button*@
+
+                                        
+@section Scripts{
+
+    <script>
+        $(document).ready(function(){
+            // select delete button using class to define function esecute when user click on button
+
+            $('.js-delete').on('click', function(){
+
+                //now check about code of selection id runing true
+
+                var btn = $(this);
+
+                console.log(btn.data('id'));  // to Help in check about Code is Correct
+
+                //var result = confirm('Are You Sure That You Need To Delete This Movie?')
+
+                console.log('result');
+
+                bootbox.confirm({
+                    message: "Are You Sure That You Need To Delete This Movie?",
+                    buttons: {
+                        confirm: {
+                            label: 'Yes',
+                            className: 'btn-success'
+                        },
+                        cancel: {
+                            label: 'No',
+                            className: 'btn-danger'
+                        }
+                    },
+                    callback: function (result) {
+                        if (result) // result is boolian then returm true or false if true execute net code
+
+                        {
+                            $.ajax
+                            ({
+                                url: '/movies/delete/' + btn.data("id"), // path execute when click on delete button
+
+                                success: function ()  // applied when movie actully is deleted
+                                {
+                                    btn.parents('.col-12').fadeOut();
+                                    //toastr.success ('Movie Deleted Succssefully');
+                                  
+                                },
+
+                                error: function () // applied when error occure w;ithen deledte movie
+                                {
+                                    
+                                }
+                            })
+                        }
+                    }
+                }); // end of bootstrap
+
+       
+
+            });  
+        });
+    </script>
+
+}

@@ -1,0 +1,47 @@
+﻿
+                                @*view of all users page 'User List' informations
+                                  To create its actions user controler
+                                *@
+
+@*UsersFormViewModel to acces properties of user*@
+
+@model IEnumerable<UsersViewModel>
+
+@{
+    ViewData["Title"] = "Users";
+}
+
+<h1>Users List</h1> 
+<hr />
+
+@*create table which appear in useres view with its info*@
+
+<table class="table table-striped" id="usertable">
+
+    <thead> @* to create head of tables*@ 
+    <tr> @*making frist row of table *@
+
+        <th>User</th> @*defines name of columns *@
+        <th>Email</th>
+        <th>Roles</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+
+    @*loping on all users returne from UsersFormViewModel  *@
+
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.UserName</td> @*UserName , Email properties defined in view model*@
+                <td>@user.Email</td>
+                <td>@string.Join(" , ", user.Roles.ToList())</td> @*to joine all roles which user assigne them*@
+                <td>
+                    <a class="btn btn-primary" asp-action="ManageRoles" asp-route-userId="@user.Id">Manage Role</a> @* linking of button which open page to manage roles of users*@
+                </td>
+            </tr>
+        }
+    </tbody>
+
+    @*Now go to user controller to define  action of this view*@

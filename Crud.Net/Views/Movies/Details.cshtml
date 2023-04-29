@@ -1,0 +1,69 @@
+﻿                     @*view of detalies button*@
+             @*type of this view is movie because the buttons returne only detalies of movie *@
+
+@model Movie
+
+                           @*coding of c#*@
+@{
+    ViewData["Title"] = Model.Name; // title of page will be the name of movie choosen by user
+}
+
+
+
+                           @*bootstrab code*@
+
+<div class="row mt-100-px justify-content-between" style="text-align:justify "> @* justify-content-between to make 3 column remai betwwen text , poster*@
+    <div class="col-md-3">   @* to poster will appear in page of detalies*@   
+        <img src="data:image/*;base64, @(Convert.ToBase64String(Model.Poster))" 
+        class="img-thumbnail" alt="poster of movie @Model.Name not exist"/>
+    </div>
+
+    <div class="col-md-9">
+        @* to appear history of movie*@
+        <div class="d-flex justify-content-between mb-2">
+            <h3>@Model.Name</h3> @* Fore name of movie*@
+
+            <span class="mt-3"> @* md-3 making rate al the level of name of movie*@
+                <i class="bi bi-star-fill text-warning"></i>@* to add icon from bootstrap in case of invalied detales of movie*@
+
+                <span class="text-muted" style="justify-content:space-between">@Model.Rate.ToString("0.0")</span> @* text-muted make text coler is gray*@
+                                                                              @* this style using to rate appear at the end of line of name of movie *@
+            </span>
+
+        </div>
+
+        <div class="text-muted"> @* to appear created year of movie*@
+
+         <span class="mr-7" >
+
+                <i class="bi bi-calendar-week"></i>
+
+                @Model.year
+
+         </span>
+
+            
+                  @* to appear genre of movie*@
+
+            <span>
+
+                <i class="bi bi-film"></i>
+
+                @Model.Genre?.Name;
+
+            </span>
+
+        </div>
+
+       
+                       @*finally appear history of movie in deatals form*@
+        <p class="mt-2">
+            @Model.History;
+
+        </p>
+
+
+    </div>
+
+</div>
+

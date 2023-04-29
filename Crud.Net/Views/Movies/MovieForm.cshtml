@@ -1,0 +1,183 @@
+﻿                   @* Define MovieFormView is a Model *@
+
+                   @*Now we make same steps which we made view of sice*@
+
+                   @*chanage form name from (Create) To (MovieForm) 
+                    inorder to using new name to returne name of view with viewmodel
+                   *@
+
+                   @* all actions execute defined in this form*@
+
+@model MovieFormViewModel 
+
+@{
+    ViewData["Title"] = "Movie form";  // name of page
+}
+
+<h2> @(Model.Id > 0 ? "Edit" : "Create") Movie</h2>  @* title of form *@
+                                                     @*if id >0 means user editigd some movie  but 
+                                                     if id =0 means the user add movie*@
+
+<br />    @*to add new line*@
+
+<section class="row justify-content-between ">       @* this tag dividing row into 12 part*@
+
+    <div class="col-md-4">                           @* this tag appear area of row which consist of only 4 column *@                 
+
+        <form method="POST" asp-action="@(Model.Id > 0 ? "Edit" : "Create")" enctype="multipart/form-data">   @*using enctype="application/x-www-form-urlencoded" to 
+                                                                                                              recieve files and post them to server *@
+            <input type="hidden" asp-for="Id" />  @* cearte edit form*@
+
+              @*taking classes from bootstrap to creat the view of model*@
+
+            <div class="form-group">   @* creat Title box*@
+
+                <label class="text-muted" asp-for=Name ></label> <br /> @*Name : is column in MovieFormViewModel*@
+                <input type="text" class="form-control" asp-for="Name" maxlength="250" />
+                <span asp-validation-for="Name" class="text-danger"></span> @*applied in caseof error*@
+            </div>
+                      
+            <div class="form-group">  @* Create drob down list to store all genres*@
+                
+                <label class="text-muted" asp-for="GenreId"></label> 
+
+                @*define location of data , and data display to user*@
+                @*Id , Name attribute which defined in class Genre*@
+
+                <select class="form-control" asp-for="GenreId"
+                        asp-items="@(new SelectList(Model.Genres , "Id", "Name"))">  @*SelectList : to making list for each (id: primary key of table genres) ,  its name of geners *@
+                                                                                   
+                    <option></option>  @* used to make list empty for frist time*@
+             
+                </select>
+
+                <span asp-validation-for="GenreId" class="text-danger"></span>
+
+            </div>
+
+                              @*Create year field in view*@
+
+            <div class="form-group w-50"  > @* w-50 : class of bootstrap to decreas space of feld*@
+
+            <label class="text-muted" asp-for="Year"></label>           @*Year is column in MovieFormViewModel to put name upper its field*@
+            <input type="number" class="form-control" asp-for="Year"  value="@(Model.Year > 0 ? Model.Year : string.Empty)"/> @*using attribute value to make place is empty *@
+            <span asp-validation-for="Year" class="text-danger"></span>                                                          @*now replace empty in prameter value with value choosen from user  *@
+
+                        @*too cancling arrows in year field using site.css*@
+
+            </div>
+                        @*Create rate field in creat view*@
+
+            <div class="form-group w-50">  @* w-50 : class of bootstrap to decreas space of field*@
+
+                <label class="text-muted" asp-for="Rate"></label> <br />      @*Rate is column in MovieFormViewModel*@
+                <input type="number" class="form-control" asp-for="Rate" value="@(Model.Rate > 0 ? Model.Rate : string.Empty)" /> @*using attribute value to make place is empty *@
+                <span asp-validation-for="Rate " class="text-danger"></span>                                                       @*now replace empty in prameter value with value choosen from user  *@
+
+            </div>
+                               @*Create History field in view*@
+
+            <div class="form-group">  
+
+                <label class="text-muted" asp-for="History"></label> <br />      @*History is column in MovieFormViewModel*@
+                <textarea placeholder="Write story lines of movie" class="form-control" asp-for="History" maxlength="2500" rows="5"> </textarea> @*using textarea : to write history , using row : to determine num of rows allow to user to write in them *@
+                <span asp-validation-for="History " class="text-danger"></span>
+
+                @*To making user can't change in size ot text area : in css textarea { resize = null}  *@
+
+            </div> 
+
+                                @*Create poster in view  *@
+
+
+            <div class="custom-file">@*   here using file becous it not number or text *@
+
+                <label class="custom-file-label" asp-for="Poster"> </label>
+               
+                <input type="file" class="custom-file-input" asp-for="Poster" accept="image/*" /> @*accept="image/*" : to allow to add images ,
+                                                                                                  if we spicify som exetinsion using accept=.png , .jpj*@
+                <span asp-validation-for=Poster class="text-danger"></span>
+
+              </div>              
+
+               @*creat two buttons , mt-4 : margin top used to space between field *@
+
+              <button type="submit" class="btn btn-primary mt-3">Save</button>
+
+              <a asp-action="Index" class="btn btn-outline-secondary mt-3"> Cancel </a>
+
+        </form>
+
+    </div>
+
+                   @* determine area which selected photo apper in it*@
+
+        <div class="col-md-5">
+
+        <div id="poster-container" class="@(Model.Id > 0 ? string.Empty:"d-none")">   @* (d-none) : used to dissapper alrt until user select image *@
+                                                                                      @* Id to working with image we can use class insted of id  *@
+
+                         @* code of source to render image "actully image" in edit form*@
+                       
+       <img src="@(Model.Id > 0 ? $"data:image/*;base64,{Convert.ToBase64String(Model.Poster)}" : string.Empty) "
+            alt="There are No images" class="img-thumbnail" /> @*alt using to print massage in no exsist image*@                                                                                                                                                                 
+           </div>
+        </div>
+</section>
+
+                        @* to render image in site using jquery or javascript*@
+
+@section Scripts
+{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial"); // to client side validation to work
+    }
+
+    <script>
+        $(document).ready(function(){                  // start of jquery
+
+            $('#Poster').on('change', function () {      // define the thing change occure in it
+
+              //console.log($(this).val().split('\\').pop) ... this way apper only in consol
+              // define the action will occure when the  poster will be changed
+              // consol create array taking 3 value but we need onle last vlue so we used .pop
+              
+              //since we need to appear image in site will usinf variabl
+
+                var selectedFile = $(this).val().split('\\').pop();
+
+                $(this).siblings('label').text(selectedFile); // to replace text in field with name of selected image
+
+               // this code to render 'show' image in site
+
+                var posterContainer = $("#poster-container"); //"poster-container" is the Id of last img code
+                                                             // anty change using "poster-container" will apply on image code line 134
+              
+                var image = window.URL.createObjectURL(this.files[0]);    // user select photo exist in array at index 0
+
+
+                posterContainer.removeClass('d-none'); // to appear in site must remoce class d-non "display"
+
+                posterContainer.find('img').attr('src', image) // to put source of img instead of src in previos img code
+
+            });// end of poster
+    
+                                // code for datepicker
+
+            $('#Year').datepicker({
+
+                   format: 'yyyy',
+                   viewMode: 'years',
+                   minViewMode: 'years',
+                   autoclose: true ,// to close tap of year automaticlly when user choose spicific year
+                   startDate: new Date('1950-01-01'), // making start year
+                   endDate: new Date('2022-12-30') ,// making last year which we now
+
+
+            });
+
+        }); //end of document
+
+    </script>
+
+} @*end of section*@

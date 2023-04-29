@@ -1,0 +1,48 @@
+﻿                               @*view which admin use it to manage users
+                                   Define its action in users controler
+                               *@
+
+@model UsersRolesViewModel
+
+@{
+    ViewData["Title"] = "Manage Roles";
+}
+<form asp-action="UpdateRoles" method="post"> @*post : mean reciev  data from method ,
+                                               UpdateRoles : method is defined in controller*@
+   
+                                          @*BOOTStrap code*@
+    
+    <div class="card mt-4">
+        <div class="card-header">
+            <h2>@Model.UserName</h2> @*show username at the topof view*@
+            Add/Remove Roles
+        </div>
+        <div class="card-body">
+            <input type="hidden" asp-for="UserId" />  @* to take value post and send it to UpdateRoles to able to know user which it is update *@
+
+            @* coding to create cheack box for each role
+               so using for loop insted of foreach becaus need to number of iterations
+            *@
+
+            @* Model.Roles.Coun to  make iterations= number of roles*@
+
+            @for (int i = 0; i < Model.Roles.Count; i++)
+            {
+                <div class="form-check m-1">
+                    <input type="hidden" asp-for="@Model.Roles[i].RoleName " />   @*to print name of role*@
+                    <input asp-for="@Model.Roles[i].IsSelected" class="form-check-input" /> @*to creat cheack box because IsSelected type is bool*@
+                    <label class="form-check-label" asp-for="@Model.Roles[i].IsSelected">
+                        @Model.Roles[i].RoleName;
+                    </label>
+                </div>
+            }
+            <div asp-validation-summary="All" class="text-danger"></div>  @*validation-summary : use to if exist error warning me*@
+        </div>
+        <div class="card-footer">
+            <button type="submit" class="btn btn-primary">Save</button> @*post data to server*@
+            <a asp-action="UsersIndex" class="btn btn-secondary">Cancel</a>
+        </div>
+    </div>
+
+
+</form>

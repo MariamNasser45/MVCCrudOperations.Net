@@ -1,0 +1,78 @@
+                  /* class : access using (.) but id access using (#)*/
+
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+                                      /* my style*/
+textarea
+{
+    resize: none;
+}
+label
+{
+    direction :ltr
+}
+                                        /*to hide arows*/
+
+/* this fore chrome , safary , .....*/
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button
+{
+    -webkit-appearance:none;
+    margin: 0;
+}
+
+/* for firefox */
+
+input[type=number]
+{
+    -moz-appearance:textfield;
+}
+.field-validation-error
+{
+    font-size: 14px;
+}
+
+.poster {
+    min-height: 236px; /* to determine volume of area spicific for image */
+
+    background-size: 100%; /* to making photo appear completly*/
+
+    background-position: center; /* to image zooming from center of it */
+
+    transition: all 0.3s ease-in-out; /*to imge zooming when user toutch it*/
+}
+
+.poster:hover   
+{
+    
+
+    background-size: 120%; /* size of zooming */
+
+    transition: all 0.3s ease-in-out;
+}
+
+.md-50-px /*to change space between nav par and content of page*/
+{
+    margin-top :50px;
+}
+.readmore{
+
+}

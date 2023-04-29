@@ -1,0 +1,47 @@
+﻿                   @*define Identity in _ViewImports *@
+
+@model IEnumerable<IdentityRole>
+
+@{
+    ViewData["Title"] = "Roles";
+}
+
+<h1>Roles</h1>
+
+<partial name="_RoleForm" model="new RoleFormViewModel()" /> @*Partial view : meaning create view in seprate view and calling it when i need*@
+                                                             @* _RoleForm : define role view in it*@
+@* same code of userindex but working with roles and its packages*@
+@*in both them using bootstrap*@
+
+<table class="table table-striped mt-4">
+    <thead>
+        <tr class="bg-primary text-white">
+            <th>Id</th>
+            <th>Role Name</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @*looping on all roles in DB and print them in table*@
+        @foreach (var role in Model)
+        {
+            <tr>
+                <td>@role.Id</td>
+                <td>@role.Name</td>
+                <td>
+
+                    @* creat bottun which open view of managepermissions*@
+                    <a class="btn btn-primary" asp-action="ManagePermissions" asp-route-roleId="@role.Id">Manage Permissions</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@*To use client side validation
+    must add scripts of my validation
+*@
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
